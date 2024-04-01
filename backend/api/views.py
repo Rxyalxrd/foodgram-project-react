@@ -8,13 +8,13 @@ class IngredientViewSet():
     queryset = Ingredient.objects.all()
     serializers_class = ...
     permission_classes = ...
-    
 
 
 class TagViewSet():
     queryset = Tag.objects.all()
     serializers_class = ...
     permission_classes = ...
+
 
 class RecipeViewSet():
     queryset = Recipe.objects.all()
