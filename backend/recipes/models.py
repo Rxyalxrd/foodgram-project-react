@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth import get_user_model  # ДЕЛАТЬ КАСТОМ
 from django.core.validators import (
     MinValueValidator, MaxValueValidator, RegexValidator
 )
@@ -10,7 +9,7 @@ from const import (
     INGREDIENT_NAME_LENGTH, HEX_MAX_LENGTH
 )
 
-User = get_user_model()  # ВРЕМЕННО
+from users.models import User
 
 
 class Tag(models.Model):
@@ -55,8 +54,8 @@ class Ingredient(models.Model):
     ingredient_name = models.CharField(
         verbose_name="Название",
         max_length=INGREDIENT_NAME_LENGTH,
+        db_index=True,
     )
-    amount = models.IntegerField(verbose_name="Количество")
     measurement_unit = models.CharField(
         verbose_name='Единица измерения',
         max_length=MEASUREMENT_UNIT_LENGTH,

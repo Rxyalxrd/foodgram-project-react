@@ -10,7 +10,7 @@ class TagAdmin(admin.ModelAdmin):
 
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
-    list_display = ('ingredient_name', 'amount', 'measurement_unit')
+    list_display = ('ingredient_name', 'measurement_unit')
     search_fields = ('ingredient_name',)
 
 

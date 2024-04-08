@@ -9,6 +9,8 @@ from users.models import (
     User, Follow
 )
 
+from const import USER_LENGTH
+
 
 class TagSerializer(serializers.ModelSerializer):
     """Сериализатор для модели Tag."""
@@ -37,6 +39,18 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recipe
+        fields = (
+            'id',
+            'tags',
+            'pub_author',
+            'ingredients',
+            'is_favorited',
+            'is_in_shopping_cart',
+            'recipe_name',
+            'image',
+            'description',
+            'cooking_time'
+        )
 
 
 class ShoppingCartSerializer(serializers.ModelSerializer):
@@ -67,6 +81,7 @@ class CustomUserSerializer(UserSerializer):
     """Сериализатор для модели User."""
 
     is_subscribed = serializers.SerializerMethodField(read_only=True)
+    username = serializers.CharField(max_length=USER_LENGTH)
 
     class Meta:
         model = User
