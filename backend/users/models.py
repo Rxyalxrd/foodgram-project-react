@@ -1,67 +1,65 @@
-from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.utils.translation import gettext_lazy as _
-from django.db.models import Q, F
+from django.db import models
+from django.db.models import UniqueConstraint
+
+from .validators import validate_username
 
 
 class User(AbstractUser):
-    email = models.EmailField(_("email address"), unique=True)
-    first_name = models.CharField(_("first name"), max_length=30)
-    last_name = models.CharField(_("last name"), max_length=150)
-    password = models.CharField(_("password"), max_length=150)
-    is_admin = models.BooleanField(_("admin status"), default=False)
-    groups = models.ManyToManyField(
-        'auth.Group',
-        related_name='custom_user_set',  # Изменение related_name для groups
-        blank=True,
-        verbose_name=_('groups'),
-        help_text=_('The groups this user belongs to. A user will get all permissions granted to each of their groups.'),
-    )
-    user_permissions = models.ManyToManyField(
-        'auth.Permission',
-        related_name='custom_user_set',  # Изменение related_name для user_permissions
-        blank=True,
-        verbose_name=_('user permissions'),
-        help_text=_('Specific permissions for this user.'),
-    )
+    """ Кастомная модель пользователя. """
 
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["first_name", "last_name", "password"]
+    email = models.EmailField(
+        'Почта',
+        max_length=254,
+        unique=True
+    )
+    first_name = models.CharField(
+        'Имя',
+        max_length=150,
+        blank=False
+    )
+    last_name = models.CharField(
+        'Фамилия',
+        max_length=150,
+        blank=False
+    )
+    username = models.CharField(
+        'Юзернейм',
+        max_length=150,
+        validators=[validate_username])
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 
-    class Meta(AbstractUser.Meta):
-        ordering = ["id"]
+    class Meta:
+        ordering = ['-pk']
 
     def __str__(self):
         return self.username
 
 
-class Follow(models.Model):
-    subscriber = models.ForeignKey(
+class Subscription(models.Model):
+    """ Модель подписок. """
+
+    user = models.ForeignKey(
         User,
+        related_name='follower',
         on_delete=models.CASCADE,
-        related_name='subscriber',
         verbose_name='Подписчик'
     )
     author = models.ForeignKey(
         User,
-        on_delete=models.CASCADE,
         related_name='author',
+        on_delete=models.CASCADE,
         verbose_name='Автор'
     )
-    created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ["id"]
         constraints = [
-            models.UniqueConstraint(
-                fields=["subscriber", "author"],  # Изменено на subscriber и author
-                name="unique_follow"
-            ),
-            models.CheckConstraint(
-                check=~Q(subscriber=F("author")),  # Изменено на subscriber и author
-                name="subscriber_not_equal_author"
+            UniqueConstraint(
+                fields=['user', 'author'],
+                name='user_author_unique'
             )
         ]
 
     def __str__(self):
-        return f'{self.subscriber} подписан на: {self.author}'
+        return f'Пользователь {self.user} подписался на {self.author}'
