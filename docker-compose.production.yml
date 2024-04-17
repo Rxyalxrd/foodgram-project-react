@@ -1,0 +1,45 @@
+version: '3.0'
+
+volumes:
+  static_value:
+  media_value:
+  postgres_data:
+
+services:
+  db:
+    image: postgres:13.0-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - .env
+    restart: always
+
+  backend:
+    image: rxyal/foodgram_backend:latest
+    restart: always
+    volumes:
+      - static_value:/backend_static
+      - media_value:/app/media/
+      - redoc:/app/api/docs/
+    depends_on:
+      - db
+    env_file:
+      - .env
+
+  frontend:
+    image: rxyal/foodgram_frontend:latest
+    command: cp -r /app/build/. /frontend_static/
+    volumes:
+      - static_value:/frontend_static
+
+  nginx:
+    image: rxyal/foodgram_gateway:latest
+    ports:
+      - "9000:80"
+    volumes:
+      - static_value:/staticfiles
+      - media_value:/media
+    depends_on:
+      - backend
+      - frontend
+    restart: always
