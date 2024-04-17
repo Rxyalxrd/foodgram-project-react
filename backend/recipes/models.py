@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.db.models import UniqueConstraint
 
@@ -131,7 +131,8 @@ class RecipeIngredient(models.Model):
     )
     amount = models.PositiveIntegerField(
         'Количество',
-        validators=[MinValueValidator(1)]
+        validators=[MinValueValidator(1),
+                    MaxValueValidator(1024)]
     )
 
     class Meta:
