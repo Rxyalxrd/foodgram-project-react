@@ -1,13 +1,11 @@
 from colorfield.fields import ColorField
+from const import (HEX_MAX_LENGTH, INGREDIENT_NAME_LENGTH, MAX_AMOUNT,
+                   MAX_COOKING_TIME, MEASUREMENT_UNIT_LENGTH, MIN_AMOUNT,
+                   MIN_COOKING_TIME, RECIPE_MAX_LENGTH, SLUG_MAX_LENGTH,
+                   TAG_NAME_LENGTH)
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models import UniqueConstraint
-
-from const import (
-    INGREDIENT_NAME_LENGTH, MEASUREMENT_UNIT_LENGTH,
-    TAG_NAME_LENGTH, HEX_MAX_LENGTH, SLUG_MAX_LENGTH,
-    RECIPE_MAX_LENGTH, MIN_COOKING_TIME, MAX_COOKING_TIME,
-    MIN_AMOUNT, MAX_AMOUNT)
 from users.models import User
 
 
