@@ -50,11 +50,6 @@ class CustomUserSerializer(UserSerializer):
 class TagSerializer(serializers.ModelSerializer):
     """ Сериализатор просмотра модели Тег. """
 
-    id = serializers.PrimaryKeyRelatedField(
-        queryset=Tag.objects.all(),
-        error_messages={'does_not_exist': 'Тега нет в базе'}
-    )
-
     class Meta:
         model = Tag
         fields = ['id', 'name', 'color', 'slug']
