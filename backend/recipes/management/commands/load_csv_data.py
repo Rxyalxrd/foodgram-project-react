@@ -16,7 +16,7 @@ class Command(BaseCommand):
             next(reader)
             ingredients = [
                 Ingredient(
-                    ingredient_name=row[0],
+                    name=row[0],
                     measurement_unit=row[1],
                 )
                 for row in reader
