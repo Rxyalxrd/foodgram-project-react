@@ -1,3 +1,4 @@
+from django.db import transaction
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
@@ -82,6 +83,7 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     tags = TagSerializer(many=True)
     author = CustomUserSerializer(read_only=True)
+
     ingredients = serializers.SerializerMethodField()
     is_favorited = serializers.SerializerMethodField(
         method_name='get_is_favorited')
@@ -158,8 +160,9 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
             'cooking_time'
         ]
 
-    def validate_unique(self, values):
-        values_list = list()
+    @staticmethod
+    def validate_unique(values):
+        values_list = set()
         for value in values:
             if value in values_list:
                 return True
@@ -196,55 +199,40 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
             })
         return data
 
-    def create_ingredients(self, ingredients, recipe):
-        for i in ingredients:
-            ingredient = Ingredient.objects.get(id=i['id'])
-            RecipeIngredient.objects.create(
-                ingredient=ingredient, recipe=recipe, amount=i['amount']
-            )
+    @staticmethod
+    def __create_or_update_obj(recipe, tags, ingredients):
 
-    def create_tags(self, tags, recipe):
         for tag in tags:
-            RecipeTag.objects.create(recipe=recipe, tag=tag)
-
-    def create(self, validated_data):
-        """
-        Создание рецепта.
-        Доступно только авторизированному пользователю.
-        """
-
-        ingredients = validated_data.pop('ingredients')
-        tags = validated_data.pop('tags')
-        author = self.context.get('request').user
-        recipe = Recipe.objects.create(author=author, **validated_data)
-        self.create_ingredients(ingredients, recipe)
-        self.create_tags(tags, recipe)
+            recipe.tags.add(tag['id'])
+        ingredients_in_recipe = []
+        for ingredient in ingredients:
+            ingredients_in_recipe.append(
+                RecipeIngredient(
+                    ingredient=ingredient['id'],
+                    recipe=recipe,
+                    amount=ingredient['amount']
+                )
+            )
+        recipe.recipe_ingredients.bulk_create(ingredients_in_recipe)
         return recipe
 
-    def update(self, instance, validated_data):
-        """
-        Изменение рецепта.
-        Доступно только автору.
-        """
+    @transaction.atomic
+    def create(self, validated_data):
 
-        RecipeTag.objects.filter(recipe=instance).delete()
-        RecipeIngredient.objects.filter(recipe=instance).delete()
-        ingredients = validated_data.pop('ingredients')
         tags = validated_data.pop('tags')
-        self.create_ingredients(ingredients, instance)
-        self.create_tags(tags, instance)
-        instance.name = validated_data.pop('name')
-        instance.text = validated_data.pop('text')
-        if validated_data.get('image'):
-            instance.image = validated_data.pop('image')
-        instance.cooking_time = validated_data.pop('cooking_time')
-        instance.save()
-        return instance
+        ingredients = validated_data.pop('ingredients')
+        recipe = super().create(validated_data)
+        return self.__create_or_update_obj(recipe, tags, ingredients)
 
-    def to_representation(self, instance):
-        return RecipeSerializer(instance, context={
-            'request': self.context.get('request')
-        }).data
+    @transaction.atomic
+    def update(self, instance, validated_data):
+
+        tags = validated_data.pop('tags')
+        ingredients = validated_data.pop('ingredients')
+        instance.tags.clear()
+        instance.ingredients.clear()
+        recipe = super().update(instance, validated_data)
+        return self.__create_or_update_obj(recipe, tags, ingredients)
 
 
 class ShowFavoriteSerializer(serializers.ModelSerializer):

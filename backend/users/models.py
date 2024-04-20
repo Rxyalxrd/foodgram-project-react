@@ -2,6 +2,9 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models import UniqueConstraint
 
+from const import (
+    EMAIL_LENGTH, FIRST_NAME_LENGTH, LAST_NAME_LENGTH, USERNAME_LENGTH
+)
 from .validators import validate_username
 
 
@@ -10,28 +13,29 @@ class User(AbstractUser):
 
     email = models.EmailField(
         'Почта',
-        max_length=254,
+        max_length=EMAIL_LENGTH,
         unique=True
     )
     first_name = models.CharField(
         'Имя',
-        max_length=150,
+        max_length=FIRST_NAME_LENGTH,
         blank=False
     )
     last_name = models.CharField(
         'Фамилия',
-        max_length=150,
+        max_length=LAST_NAME_LENGTH,
         blank=False
     )
     username = models.CharField(
         'Юзернейм',
-        max_length=150,
-        validators=[validate_username])
+        max_length=USERNAME_LENGTH,
+        validators=[validate_username]
+    )
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 
     class Meta:
-        ordering = ['-pk']
+        ordering = ('-pk',)
 
     def __str__(self):
         return self.username
