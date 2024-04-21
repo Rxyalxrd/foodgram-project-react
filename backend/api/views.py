@@ -67,10 +67,9 @@ class ShowSubscriptionsView(ListAPIView):
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
     ''' Отображение тегов. '''
 
-    permission_classes = (AllowAny,)
-    pagination_class = None
-    serializer_class = TagSerializer
     queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+    pagination_class = None
 
 
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
