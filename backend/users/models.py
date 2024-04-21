@@ -1,9 +1,8 @@
+from const import (EMAIL_LENGTH, FIRST_NAME_LENGTH, LAST_NAME_LENGTH,
+                   USERNAME_LENGTH)
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models import UniqueConstraint
-
-from const import (EMAIL_LENGTH, FIRST_NAME_LENGTH, LAST_NAME_LENGTH,
-                   USERNAME_LENGTH)
 
 from .validators import validate_username
 

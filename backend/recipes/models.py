@@ -1,11 +1,10 @@
 from colorfield.fields import ColorField
-from django.core.validators import MaxValueValidator, MinValueValidator
-from django.db import models
-from django.db.models import UniqueConstraint
-
 from const import (INGREDIENT_NAME_LENGTH, MAX_AMOUNT, MAX_COOKING_TIME,
                    MEASUREMENT_UNIT_LENGTH, MIN_AMOUNT, MIN_COOKING_TIME,
                    RECIPE_MAX_LENGTH, SLUG_MAX_LENGTH, TAG_NAME_LENGTH)
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
+from django.db.models import UniqueConstraint
 from users.models import User
 
 
