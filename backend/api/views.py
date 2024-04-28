@@ -117,17 +117,15 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     @action(methods=['POST'], detail=True)
     def add_to_favorites(self, request, pk=None):
-        serializer_class = FavoriteSerializer
         return self.process_favorite(
             request=request, pk=pk,
-            serializer_class=serializer_class)
+            serializer_class=FavoriteSerializer)
 
     @add_to_favorites.mapping.delete
     def remove_from_favorites(self, request, pk=None):
-        serializer_class = FavoriteSerializer
         return self.process_favorite(
             request=request, pk=pk,
-            serializer_class=serializer_class
+            serializer_class=FavoriteSerializer
         )
 
     @staticmethod

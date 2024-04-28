@@ -76,6 +76,12 @@ sudo docker compose exec backend python manage.py migrate
 sudo docker compose exec backend python manage.py createsuperuser
 ```
 
+- Логин и пароль, чтобы зайти в админку:
+```
+123@test.com
+test1
+```
+
 - Собрать статику:
 ```
 sudo docker compose exec backend python manage.py collectstatic --noinput
