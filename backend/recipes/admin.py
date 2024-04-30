@@ -32,9 +32,7 @@ class RecipeAdmin(admin.ModelAdmin):
     )
 
     def favorites(self, obj):
-        if Favorite.objects.filter(recipe=obj).exists():
-            return Favorite.objects.filter(recipe=obj).count()
-        return 0
+        return Favorite.objects.filter(recipe=obj).count()
 
 
 @admin.register(ShoppingCart)

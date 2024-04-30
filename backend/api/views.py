@@ -23,7 +23,7 @@ from .serializers import (CreateRecipeSerializer, FavoriteSerializer,
 
 
 class SubscribeView(APIView):
-    ''' Операция подписки/отписки. '''
+    """Операция подписки/отписки."""
 
     permission_classes = (IsAuthenticated,)
 
@@ -54,7 +54,7 @@ class SubscribeView(APIView):
 
 
 class ShowSubscriptionsView(ListAPIView):
-    ''' Отображение подписок. '''
+    """Отображение подписок."""
 
     permission_classes = (IsAuthenticated,)
     pagination_class = CustomPagination
@@ -66,7 +66,7 @@ class ShowSubscriptionsView(ListAPIView):
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
-    ''' Отображение тегов. '''
+    """Отображение тегов."""
 
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
@@ -74,7 +74,7 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
-    ''' Отображение ингредиентов. '''
+    """Отображение ингредиентов."""
 
     permission_classes = (AllowAny,)
     pagination_class = None
@@ -85,7 +85,7 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
-    ''' Операции с рецептами: добавление/изменение/удаление/просмотр. '''
+    """Операции с рецептами: добавление/изменение/удаление/просмотр."""
 
     permission_classes = (IsAuthorOrAdminOrReadOnly,)
     pagination_class = CustomPagination

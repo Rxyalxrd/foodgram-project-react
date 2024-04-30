@@ -9,7 +9,7 @@ from users.models import User
 
 
 class Ingredient(models.Model):
-    """ Модель ингредиента. """
+    """Модель ингредиента."""
 
     name = models.CharField(
         'Название ингредиента',
@@ -36,7 +36,7 @@ class Ingredient(models.Model):
 
 
 class Tag(models.Model):
-    """ Модель тега. """
+    """Модель тега."""
 
     name = models.CharField(
         'Название тега',
@@ -64,7 +64,7 @@ class Tag(models.Model):
 
 
 class Recipe(models.Model):
-    """ Модель рецепта. """
+    """Модель рецепта."""
 
     tags = models.ManyToManyField(
         Tag,
@@ -125,7 +125,7 @@ class Recipe(models.Model):
 
 
 class RecipeIngredient(models.Model):
-    """ Модель связи ингредиента и рецепта. """
+    """Модель связи ингредиента и рецепта."""
 
     recipe = models.ForeignKey(
         Recipe,
@@ -160,7 +160,7 @@ class RecipeIngredient(models.Model):
 
 
 class RecipeTag(models.Model):
-    """ Модель связи тега и рецепта. """
+    """Модель связи тега и рецепта."""
 
     recipe = models.ForeignKey(
         Recipe,
@@ -183,7 +183,7 @@ class RecipeTag(models.Model):
 
 
 class ShoppingCart(models.Model):
-    """ Модель корзины. """
+    """Модель корзины."""
 
     user = models.ForeignKey(
         User,
@@ -208,7 +208,7 @@ class ShoppingCart(models.Model):
 
 
 class Favorite(models.Model):
-    """ Модель избранного. """
+    """Модель избранного."""
 
     user = models.ForeignKey(
         User,
