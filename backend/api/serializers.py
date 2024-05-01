@@ -51,18 +51,9 @@ class CustomUserSerializer(UserSerializer):
 class TagSerializer(serializers.ModelSerializer):
     """Сериализатор просмотра модели Тег."""
 
-    id = serializers.PrimaryKeyRelatedField(
-        queryset=Tag.objects.all(),
-        error_messages={'does_not_exist': 'Такого тега не существует!'})
-
     class Meta:
         model = Tag
-        fields = ['id', 'name', 'color', 'slug']
-
-    def to_internal_value(self, data):
-
-        tag = {'id': data}
-        return super().to_internal_value(tag)
+        fields = '__all__'
 
 
 class RecipeIngredientSerializer(serializers.ModelSerializer):
