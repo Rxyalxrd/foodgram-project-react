@@ -1,4 +1,5 @@
 from django.db import transaction
+from django.shortcuts import get_object_or_404
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from drf_extra_fields.fields import Base64ImageField
 from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
@@ -170,9 +171,13 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
     def validate_unique(values):
         values_set = set()
         for value in values:
-            if value in values_set:
+            item = get_object_or_404(
+                Ingredient,
+                id=value.get('id')
+            )
+            if item in values_set:
                 return True
-            values_set.add(value)
+            values_set.add(item)
         return False
 
     def validate_ingredients(self, data):
