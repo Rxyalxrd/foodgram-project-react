@@ -198,17 +198,20 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
                 })
         return data
 
-    def validate_tags(self, data):
-        tags = data
+    def validate_tags(self, value):
+        tags = value
         if not tags:
-            raise serializers.ValidationError({
-                'tags': 'Нужно выбрать хотя бы один тег!'
-            })
-        if self.validate_unique(tags):
-            raise serializers.ValidationError({
-                'tags': 'Теги должны быть уникальными!'
-            })
-        return data
+            raise serializers.ValidationError(
+                {'tags': 'Нужно выбрать хотя бы один тег!'}
+            )
+        tags_set = set()
+        for tag in tags:
+            if tag in tags_set:
+                raise serializers.ValidationError(
+                    {'tags': 'Теги должны быть уникальными!'}
+                )
+            tags_set.add(tag)
+        return value
 
     @staticmethod
     def create_or_update_obj(recipe, tags, ingredients):
