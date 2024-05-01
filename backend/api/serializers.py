@@ -168,11 +168,11 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def validate_unique(values):
-        values_list = set()
+        values_set = set()
         for value in values:
-            if value in values_list:
+            if value in values_set:
                 return True
-            values_list.append(value)
+            values_set.add(value)
         return False
 
     def validate_ingredients(self, data):
